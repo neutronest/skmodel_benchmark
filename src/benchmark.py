@@ -16,8 +16,7 @@ from sklearn import metrics
 from sklearn.utils import shuffle
 from sklearn.externals import joblib
 
-def train_new_model(model,
-                    model_type,
+def train_new_model(model_type,
                     model_params,
                     train_data_x,
                     train_data_y,
@@ -25,9 +24,6 @@ def train_new_model(model,
     """
     Params
     ------
-    model: Generic Model Type from sklearn
-           can be any model from sklearn
-
     model_type: the model name
                 str
 
@@ -49,19 +45,22 @@ def train_new_model(model,
     """
     trained_model = None
     if model_type == "logistic_regression":
+        print "logistic regression model training"
         trained_model = LogisticRegression(
             C=model_params.get('C'),
-            penalty=model_params.get('penalty')
-            solver=model_params.get('solver')
+            penalty=model_params.get('penalty'),
+            solver=model_params.get('solver'),
             n_jobs=model_params.get('n_jobs')
         )
-        model.fit(train_data_x, train_data_y)
+        trained_model.fit(train_data_x, train_data_y)
+        print "model trained finished"
     ### CUSTOM MODIFICATION
     ### you can add any other model and corresponding params here!
     ###
     ###
 
     if trained_model != None and save_model_path != None:
+        print "### SAVE MODEL to %s"%(save_model_path)
         joblib.dump(trained_model, save_model_path)
     return trained_model
 
@@ -96,7 +95,7 @@ def model_metrics(trained_model,
     y_true = None
     y_pred = None
     if model_type == "logistic_regression":
-        y_pred = trained_model.predict(train_data_x)
+        y_pred = trained_model.predict(test_data_x)
         y_true = test_data_y
 
     ## result benchmark
